@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "494697771550",
+    "firebase_url": "https://sellastic-pots-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "sellastic-pots",
+    "storage_bucket": "sellastic-pots.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494697771550:android:bebe84c5bb8617430e740f",
+        "android_client_info": {
+          "package_name": "com.sellasticpots.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUBwgvGTTn9S8PKnmtVHSyXv8HMawpdSY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
