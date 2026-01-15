@@ -3,8 +3,11 @@ package com.sellasticpots.app
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.sellasticpots.app.databinding.ActivityForgotPasswordBinding
 
@@ -18,8 +21,18 @@ class ForgotPasswordActivity : AppCompatActivity() {
         // Force light mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+        // Enable edge-to-edge
+        enableEdgeToEdge()
+
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Handle window insets
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()

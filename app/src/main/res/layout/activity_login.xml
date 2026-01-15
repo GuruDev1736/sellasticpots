@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:fitsSystemWindows="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -163,7 +165,7 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_sign_in"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -172,7 +174,8 @@
                     android:padding="15dp"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp" />
 
 
             </LinearLayout>

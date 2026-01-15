@@ -4,8 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.sellasticpots.app.databinding.ActivitySignupBinding
@@ -22,8 +25,18 @@ class SignupActivity : AppCompatActivity() {
         // Force light mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+        // Enable edge-to-edge
+        enableEdgeToEdge()
+
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Handle window insets
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         // Initialize Firebase
         auth = FirebaseAuth.getInstance()
@@ -39,11 +52,37 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun signUpUser() {
+        val fullName = binding.etFullName.text.toString().trim()
+        val phoneNo = binding.etPhoneNumber.text.toString().trim()
         val email = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString().trim()
         val confirmPassword = binding.etConfirmPassword.text.toString().trim()
 
         // Validation
+        if (fullName.isEmpty()) {
+            binding.etFullName.error = "Full name is required"
+            binding.etFullName.requestFocus()
+            return
+        }
+
+        if (fullName.length < 3) {
+            binding.etFullName.error = "Name must be at least 3 characters"
+            binding.etFullName.requestFocus()
+            return
+        }
+
+        if (phoneNo.isEmpty()) {
+            binding.etPhoneNumber.error = "Phone number is required"
+            binding.etPhoneNumber.requestFocus()
+            return
+        }
+
+        if (phoneNo.length < 10) {
+            binding.etPhoneNumber.error = "Please enter a valid phone number"
+            binding.etPhoneNumber.requestFocus()
+            return
+        }
+
         if (email.isEmpty()) {
             binding.etEmail.error = "Email is required"
             binding.etEmail.requestFocus()
@@ -95,6 +134,8 @@ class SignupActivity : AppCompatActivity() {
                             uid = it.uid,
                             email = email,
                             username = username,
+                            fullName = fullName,
+                            phoneNo = phoneNo,
                             createdAt = System.currentTimeMillis()
                         )
 
