@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sellasticpots.app.adapters.ProductsAdapter
 import com.sellasticpots.app.databinding.FragmentProductsBinding
 import com.sellasticpots.app.models.Product
+import com.sellasticpots.app.utils.CartManager
 
 class ProductsFragment : Fragment() {
 
@@ -36,7 +37,8 @@ class ProductsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        productsAdapter = ProductsAdapter(allProducts) { product ->
+        productsAdapter = ProductsAdapter(allProducts) { product, quantity ->
+            CartManager.addToCart(product, quantity)
             Toast.makeText(requireContext(), "${product.name} added to cart!", Toast.LENGTH_SHORT).show()
         }
 

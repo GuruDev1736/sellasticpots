@@ -17,7 +17,11 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.sellasticpots.app.databinding.ActivityMainBinding
+import com.sellasticpots.app.fragments.MyCartFragment
 import com.sellasticpots.app.fragments.ProductsFragment
+import com.sellasticpots.app.fragments.WishlistFragment
+import com.sellasticpots.app.utils.CartManager
+import com.sellasticpots.app.utils.WishlistManager
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -26,48 +30,42 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Force light mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        // Enable edge-to-edge
         enableEdgeToEdge()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Handle window insets for the toolbar and main content
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            // Only apply top padding to toolbar, bottom to fragment container
             binding.toolbar.setPadding(0, systemBars.top, 0, 0)
             binding.fragmentContainer.setPadding(0, 0, 0, systemBars.bottom)
             insets
         }
 
-        // Handle insets for navigation drawer
         ViewCompat.setOnApplyWindowInsetsListener(binding.navView) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, systemBars.top, 0, systemBars.bottom)
             insets
         }
 
-        // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Check if user is logged in
         val currentUser = auth.currentUser
         if (currentUser == null) {
-            // User not logged in, redirect to login
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
             return
         }
 
-        // Setup toolbar
+        CartManager.initialize()
+
+        WishlistManager.initialize()
+
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        // Setup navigation drawer
         val toggle = ActionBarDrawerToggle(
             this,
             binding.drawerLayout,
@@ -80,24 +78,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        // Update navigation header with user info
         val headerView = binding.navView.getHeaderView(0)
         val navHeaderEmail = headerView.findViewById<TextView>(R.id.nav_header_email)
         navHeaderEmail.text = currentUser.email ?: "No email"
 
-        // Load default fragment (Products)
         if (savedInstanceState == null) {
-            loadFragment(ProductsFragment())
-            binding.navView.setCheckedItem(R.id.nav_products)
-            binding.toolbarTitle.text = "Products"
+            val openCart = intent.getBooleanExtra("openCart", false)
+            if (openCart) {
+                loadFragment(MyCartFragment())
+                binding.navView.setCheckedItem(R.id.nav_cart)
+                binding.toolbarTitle.text = "My Cart"
+            } else {
+                loadFragment(ProductsFragment())
+                binding.navView.setCheckedItem(R.id.nav_products)
+                binding.toolbarTitle.text = "Products"
+            }
         }
 
-        // Cart icon click
-        binding.cartIcon.setOnClickListener {
-            Toast.makeText(this, "Cart clicked", Toast.LENGTH_SHORT).show()
+        binding.cartContainer.setOnClickListener {
+            loadFragment(MyCartFragment())
+            binding.toolbarTitle.text = "My Cart"
+            binding.navView.setCheckedItem(R.id.nav_cart)
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        CartManager.cartCount.observe(this) { count ->
+            updateCartBadge(count)
         }
 
-        // Handle back button
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -109,6 +116,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+
+        val openCart = intent.getBooleanExtra("openCart", false)
+        if (openCart) {
+            loadFragment(MyCartFragment())
+            binding.navView.setCheckedItem(R.id.nav_cart)
+            binding.toolbarTitle.text = "My Cart"
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_products -> {
@@ -116,16 +136,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 binding.toolbarTitle.text = "Pottery Collection"
             }
             R.id.nav_cart -> {
+                loadFragment(MyCartFragment())
                 binding.toolbarTitle.text = "My Cart"
-                Toast.makeText(this, "Cart feature coming soon", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_orders -> {
                 binding.toolbarTitle.text = "My Orders"
                 Toast.makeText(this, "Orders feature coming soon", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_wishlist -> {
-                binding.toolbarTitle.text = "Wishlist"
-                Toast.makeText(this, "Wishlist feature coming soon", Toast.LENGTH_SHORT).show()
+                loadFragment(WishlistFragment())
+                binding.toolbarTitle.text = "My Wishlist"
             }
             R.id.nav_profile -> {
                 binding.toolbarTitle.text = "Profile"
@@ -134,7 +154,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_logout -> {
                 auth.signOut()
                 startActivity(Intent(this, LoginActivity::class.java))
-                finishAffinity() // Clear back stack
+                finishAffinity()
                 return true
             }
         }
@@ -147,4 +167,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
+
+    private fun updateCartBadge(count: Int) {
+        if (count > 0) {
+            binding.cartBadge.visibility = android.view.View.VISIBLE
+            binding.cartBadge.text = count.toString()
+        } else {
+            binding.cartBadge.visibility = android.view.View.GONE
+        }
+    }
 }
+

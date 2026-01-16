@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/secondary"
+        app:elevation="4dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+            app:navigationIconTint="@color/white">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All Reviews"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Review Stats Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/stats_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:backgroundTint="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Overall Rating -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <!-- Average Rating -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_marginEnd="24dp">
+
+                            <TextView
+                                android:id="@+id/average_rating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4.8"
+                                android:textColor="@color/text_dark"
+                                android:textSize="48sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/rating_stars"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="★★★★★"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="4dp" />
+
+                            <TextView
+                                android:id="@+id/total_reviews"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="124 Reviews"
+                                android:textColor="@color/text_gray"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <!-- Rating Distribution -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <!-- 5 Stars -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="5"
+                                    android:textColor="@color/text_dark"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="4dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="★"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp" />
+
+                                <ProgressBar
+                                    android:id="@+id/rating_5_bar"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="0dp"
+                                    android:layout_height="8dp"
+                                    android:layout_weight="1"
+                                    android:progressTint="@color/secondary"
+                                    android:progressBackgroundTint="@color/border_gray"
+                                    android:progress="80" />
+
+                                <TextView
+                                    android:id="@+id/rating_5_count"
+                                    android:layout_width="30dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="99"
+                                    android:textColor="@color/text_gray"
+                                    android:textSize="12sp"
+                                    android:gravity="end"
+                                    android:layout_marginStart="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- 4 Stars -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="4"
+                                    android:textColor="@color/text_dark"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="4dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="★"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp" />
+
+                                <ProgressBar
+                                    android:id="@+id/rating_4_bar"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="0dp"
+                                    android:layout_height="8dp"
+                                    android:layout_weight="1"
+                                    android:progressTint="@color/secondary"
+                                    android:progressBackgroundTint="@color/border_gray"
+                                    android:progress="15" />
+
+                                <TextView
+                                    android:id="@+id/rating_4_count"
+                                    android:layout_width="30dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="19"
+                                    android:textColor="@color/text_gray"
+                                    android:textSize="12sp"
+                                    android:gravity="end"
+                                    android:layout_marginStart="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- 3 Stars -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="3"
+                                    android:textColor="@color/text_dark"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="4dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="★"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp" />
+
+                                <ProgressBar
+                                    android:id="@+id/rating_3_bar"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="0dp"
+                                    android:layout_height="8dp"
+                                    android:layout_weight="1"
+                                    android:progressTint="@color/secondary"
+                                    android:progressBackgroundTint="@color/border_gray"
+                                    android:progress="3" />
+
+                                <TextView
+                                    android:id="@+id/rating_3_count"
+                                    android:layout_width="30dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="4"
+                                    android:textColor="@color/text_gray"
+                                    android:textSize="12sp"
+                                    android:gravity="end"
+                                    android:layout_marginStart="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- 2 Stars -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textColor="@color/text_dark"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="4dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="★"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp" />
+
+                                <ProgressBar
+                                    android:id="@+id/rating_2_bar"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="0dp"
+                                    android:layout_height="8dp"
+                                    android:layout_weight="1"
+                                    android:progressTint="@color/secondary"
+                                    android:progressBackgroundTint="@color/border_gray"
+                                    android:progress="1" />
+
+                                <TextView
+                                    android:id="@+id/rating_2_count"
+                                    android:layout_width="30dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="1"
+                                    android:textColor="@color/text_gray"
+                                    android:textSize="12sp"
+                                    android:gravity="end"
+                                    android:layout_marginStart="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- 1 Star -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1"
+                                    android:textColor="@color/text_dark"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="4dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="★"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp" />
+
+                                <ProgressBar
+                                    android:id="@+id/rating_1_bar"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="0dp"
+                                    android:layout_height="8dp"
+                                    android:layout_weight="1"
+                                    android:progressTint="@color/secondary"
+                                    android:progressBackgroundTint="@color/border_gray"
+                                    android:progress="1" />
+
+                                <TextView
+                                    android:id="@+id/rating_1_count"
+                                    android:layout_width="30dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="1"
+                                    android:textColor="@color/text_gray"
+                                    android:textSize="12sp"
+                                    android:gravity="end"
+                                    android:layout_marginStart="8dp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Reviews List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reviews_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/empty_state_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="48dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📝"
+                    android:textSize="64sp"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Reviews Yet"
+                    android:textColor="@color/text_dark"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Be the first to review this product!"
+                    android:textColor="@color/text_gray"
+                    android:textSize="14sp"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -10,7 +10,7 @@ import com.sellasticpots.app.models.Product
 
 class ProductsAdapter(
     private var products: List<Product>,
-    private val onAddToCart: (Product) -> Unit
+    private val onAddToCart: (Product, Int) -> Unit
 ) : RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>() {
 
     private val quantities = mutableMapOf<String, Int>()
@@ -23,18 +23,15 @@ class ProductsAdapter(
             binding.productPrice.text = "$${product.price}"
             binding.productRating.text = "${product.rating} (${product.reviews})"
 
-            // Initialize quantity
             val quantity = quantities[product.id] ?: 1
             binding.quantityText.text = quantity.toString()
 
-            // Click on product card to view details
             binding.root.setOnClickListener {
                 val intent = Intent(binding.root.context, ProductDetailActivity::class.java)
                 intent.putExtra("product", product)
                 binding.root.context.startActivity(intent)
             }
 
-            // Decrease quantity
             binding.btnDecrease.setOnClickListener {
                 val currentQty = quantities[product.id] ?: 1
                 if (currentQty > 1) {
@@ -43,16 +40,15 @@ class ProductsAdapter(
                 }
             }
 
-            // Increase quantity
             binding.btnIncrease.setOnClickListener {
                 val currentQty = quantities[product.id] ?: 1
                 quantities[product.id] = currentQty + 1
                 binding.quantityText.text = (currentQty + 1).toString()
             }
 
-            // Add to cart
             binding.btnAddToCart.setOnClickListener {
-                onAddToCart(product)
+                val currentQty = quantities[product.id] ?: 1
+                onAddToCart(product, currentQty)
             }
         }
     }

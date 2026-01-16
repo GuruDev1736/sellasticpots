@@ -18,23 +18,19 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Force light mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        // Enable edge-to-edge
         enableEdgeToEdge()
 
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Handle window insets
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
         binding.tvBackToLogin.setOnClickListener {
@@ -49,7 +45,6 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private fun sendPasswordResetEmail() {
         val email = binding.etEmail.text.toString().trim()
 
-        // Validation
         if (email.isEmpty()) {
             binding.etEmail.error = "Email is required"
             binding.etEmail.requestFocus()
@@ -92,4 +87,3 @@ class ForgotPasswordActivity : AppCompatActivity() {
         binding.btnSendReset.text = if (isLoading) "Sending..." else getString(R.string.send_reset_link)
     }
 }
-

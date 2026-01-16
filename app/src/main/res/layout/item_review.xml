@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <!-- User Avatar -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:cardCornerRadius="20dp"
+        android:layout_marginEnd="12dp">
+
+        <ImageView
+            android:id="@+id/reviewer_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="centerCrop"
+            android:background="@drawable/button_primary" />
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Review Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Reviewer Name and Rating Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:id="@+id/reviewer_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="User Name"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/review_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⭐⭐⭐⭐⭐"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- Verified Badge and Date Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/verified_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VERIFIED BUYER"
+                android:textColor="@color/primary_green"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" • "
+                android:textColor="@color/text_gray"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/review_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jan 15, 2026"
+                android:textColor="@color/text_gray"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <!-- Review Text -->
+        <TextView
+            android:id="@+id/review_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is a great product! Highly recommend it to everyone."
+            android:textColor="@color/text_gray"
+            android:textSize="13sp"
+            android:lineSpacingExtra="2dp"
+            android:fontFamily="serif" />
+
+    </LinearLayout>
+
+</LinearLayout>

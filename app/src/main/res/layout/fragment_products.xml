@@ -5,26 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/primary">
 
-    <!-- Header with search and cart -->
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/header_background"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pottery Collection"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:padding="16dp" />
-
-    </LinearLayout>
 
     <!-- Search bar -->
     <androidx.cardview.widget.CardView
@@ -34,22 +14,22 @@
         android:layout_margin="16dp"
         app:cardCornerRadius="25dp"
         app:cardElevation="4dp"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/search_edit_text"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:hint="Search handmade pottery..."
-            android:textColorHint="@color/text_light_gray"
-            android:textColor="@color/text_dark"
             android:background="@android:color/transparent"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
             android:drawableStart="@android:drawable/ic_menu_search"
             android:drawablePadding="8dp"
             android:drawableTint="@color/text_gray"
-            android:inputType="text" />
+            android:hint="Search handmade pottery..."
+            android:inputType="text"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="@color/text_dark"
+            android:textColorHint="@color/text_light_gray" />
 
     </androidx.cardview.widget.CardView>
 

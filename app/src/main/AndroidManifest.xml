@@ -7,9 +7,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sellasticpots"
         tools:ignore="UnusedAttribute">
@@ -46,11 +46,18 @@
         <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTop"
             android:exported="false" />
 
         <!-- Product Detail Activity -->
         <activity
             android:name=".ProductDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Sellasticpots" />
+
+        <!-- All Reviews Activity -->
+        <activity
+            android:name=".AllReviewsActivity"
             android:exported="false"
             android:theme="@style/Theme.Sellasticpots" />
 

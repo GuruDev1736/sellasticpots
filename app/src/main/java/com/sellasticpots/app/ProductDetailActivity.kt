@@ -8,17 +8,26 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.sellasticpots.app.databinding.ActivityProductDetailBinding
 import com.sellasticpots.app.databinding.ItemProductImageBinding
 import com.sellasticpots.app.models.Product
+import com.sellasticpots.app.models.Review
+import com.sellasticpots.app.adapters.ReviewsAdapter
+import com.sellasticpots.app.utils.ReviewManager
+import com.sellasticpots.app.utils.CartManager
+import com.sellasticpots.app.utils.WishlistManager
 
 class ProductDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var product: Product
     private var quantity = 1
-    private var isFavorite = false
+    private var selectedRating = 0f
+    private lateinit var reviewsAdapter: ReviewsAdapter
+    private val reviews = mutableListOf<Review>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +48,19 @@ class ProductDetailActivity : AppCompatActivity() {
         setupImageViewPager()
         setupQuantityControls()
         setupButtons()
+        setupReviewsRecyclerView()
+        loadReviews()
+        updateAddToCartButton()
+
+        // Observe cart changes to update button
+        CartManager.cartItems.observe(this) {
+            updateAddToCartButton()
+        }
+
+        // Observe wishlist changes to update button
+        WishlistManager.wishlistItems.observe(this) {
+            updateWishlistButton()
+        }
     }
 
     private fun setupToolbar() {
@@ -46,12 +68,13 @@ class ProductDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.btnShare.setOnClickListener {
-            shareProduct()
-        }
+        // Hide share button
+        binding.btnShare.visibility = android.view.View.GONE
 
+        // Setup wishlist button
+        updateWishlistButton()
         binding.btnFavorite.setOnClickListener {
-            toggleFavorite()
+            toggleWishlist()
         }
     }
 
@@ -65,11 +88,8 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun setupImageViewPager() {
-        // If product has no images, use placeholder
-        val images = if (product.images.isEmpty()) {
-            listOf("") // Placeholder
-        } else {
-            product.images
+        val images = product.images.ifEmpty {
+            listOf("")
         }
 
         val imageAdapter = ProductImageAdapter(images)
@@ -107,58 +127,185 @@ class ProductDetailActivity : AppCompatActivity() {
         }
 
         binding.btnSeeAllReviews.setOnClickListener {
-            Toast.makeText(this, "See all reviews coming soon", Toast.LENGTH_SHORT).show()
+            // Open AllReviewsActivity to show all reviews
+            val intent = Intent(this, AllReviewsActivity::class.java)
+            intent.putExtra("product", product)
+            startActivity(intent)
         }
 
-        // Simple rating system
-        var selectedRating = 0
+        // Interactive rating stars
+        setupRatingStars()
+    }
+
+    private fun setupRatingStars() {
+        updateRatingStars()
+
         binding.ratingStars.setOnClickListener {
-            selectedRating = if (selectedRating < 5) selectedRating + 1 else 1
-            binding.ratingStars.text = "★".repeat(selectedRating) + "☆".repeat(5 - selectedRating)
+            // Cycle through ratings 1-5
+            selectedRating = if (selectedRating < 5f) selectedRating + 1f else 1f
+            updateRatingStars()
         }
+    }
+
+    private fun updateRatingStars() {
+        val fullStars = selectedRating.toInt()
+        val emptyStars = 5 - fullStars
+        val stars = "★".repeat(fullStars) + "☆".repeat(emptyStars)
+        binding.ratingStars.text = stars
+        binding.ratingStars.setTextColor(
+            if (selectedRating > 0)
+                resources.getColor(android.R.color.holo_orange_light, null)
+            else
+                resources.getColor(R.color.text_gray, null)
+        )
     }
 
     private fun addToCart() {
-        Toast.makeText(
-            this,
-            "$quantity x ${product.name} added to cart!",
-            Toast.LENGTH_SHORT
-        ).show()
+        val currentCart = CartManager.cartItems.value ?: mutableListOf()
+        val existingItem = currentCart.find { it.product.id == product.id }
+
+        if (existingItem != null) {
+            Snackbar.make(
+                findViewById(android.R.id.content),
+                "Product already in cart with ${existingItem.quantity} items",
+                Snackbar.LENGTH_LONG
+            ).apply {
+                setAction("VIEW CART") {
+                    val intent = Intent(this@ProductDetailActivity, MainActivity::class.java).apply {
+                        putExtra("openCart", true)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    }
+                    startActivity(intent)
+                    finish()
+                }
+                setActionTextColor(resources.getColor(R.color.secondary, null))
+                show()
+            }
+        } else {
+            CartManager.addToCart(product, quantity)
+
+            Toast.makeText(
+                this,
+                "$quantity x ${product.name} added to cart!",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            showAddToCartConfirmation()
+        }
+    }
+
+    private fun showAddToCartConfirmation() {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            "Added to cart successfully!",
+            Snackbar.LENGTH_LONG
+        ).apply {
+            setAction("VIEW CART") {
+                val intent = Intent(this@ProductDetailActivity, MainActivity::class.java).apply {
+                    putExtra("openCart", true)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
+                startActivity(intent)
+                finish()
+            }
+            setActionTextColor(resources.getColor(R.color.secondary, null))
+            show()
+        }
+    }
+
+    private fun updateAddToCartButton() {
+        val currentCart = CartManager.cartItems.value ?: mutableListOf()
+        val existingItem = currentCart.find { it.product.id == product.id }
+
+        if (existingItem != null) {
+            binding.btnAddToCartBottom.text = "View in Cart (${existingItem.quantity})"
+            binding.btnAddToCartBottom.icon = resources.getDrawable(android.R.drawable.ic_menu_view, null)
+        } else {
+            binding.btnAddToCartBottom.text = "Add to Cart"
+            binding.btnAddToCartBottom.icon = resources.getDrawable(R.drawable.ic_cart, null)
+        }
     }
 
     private fun submitReview() {
-        val reviewText = binding.reviewText.text.toString()
-        if (reviewText.isNotEmpty()) {
-            Toast.makeText(this, "Review submitted! Thank you!", Toast.LENGTH_SHORT).show()
-            binding.reviewText.text?.clear()
+        val reviewText = binding.reviewText.text.toString().trim()
+
+        ReviewManager.submitReview(
+            productId = product.id,
+            rating = selectedRating,
+            reviewText = reviewText,
+            onSuccess = {
+                Toast.makeText(this, "Review submitted! Thank you!", Toast.LENGTH_SHORT).show()
+                binding.reviewText.text?.clear()
+                selectedRating = 0f
+                updateRatingStars()
+            },
+            onError = { error ->
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun setupReviewsRecyclerView() {
+        reviewsAdapter = ReviewsAdapter(reviews)
+        binding.reviewsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@ProductDetailActivity)
+            adapter = reviewsAdapter
+            isNestedScrollingEnabled = false
+        }
+    }
+
+    private fun loadReviews() {
+        ReviewManager.getReviews(product.id) { loadedReviews ->
+            reviews.clear()
+            reviews.addAll(loadedReviews)
+
+            val limitedReviews = reviews.take(3)
+            reviewsAdapter.updateReviews(limitedReviews)
+
+            if (reviews.isNotEmpty()) {
+                val avgRating = ReviewManager.calculateAverageRating(reviews)
+                binding.productRating.text = String.format("%.1f (%d reviews)", avgRating, reviews.size)
+            }
+
+            updateReviewsVisibility()
+        }
+    }
+
+    private fun updateReviewsVisibility() {
+        if (reviews.isEmpty()) {
+            binding.reviewsRecyclerView.visibility = android.view.View.GONE
+            binding.noReviewsText.visibility = android.view.View.VISIBLE
         } else {
-            Toast.makeText(this, "Please write a review", Toast.LENGTH_SHORT).show()
+            binding.reviewsRecyclerView.visibility = android.view.View.VISIBLE
+            binding.noReviewsText.visibility = android.view.View.GONE
         }
     }
 
-    private fun shareProduct() {
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, "Check out ${product.name} for $${product.price}!")
-            type = "text/plain"
-        }
-        startActivity(Intent.createChooser(shareIntent, "Share via"))
+    private fun toggleWishlist() {
+        WishlistManager.toggleWishlist(
+            product = product,
+            onSuccess = { isAdded ->
+                updateWishlistButton()
+                Toast.makeText(
+                    this,
+                    if (isAdded) "Added to wishlist" else "Removed from wishlist",
+                    Toast.LENGTH_SHORT
+                ).show()
+            },
+            onError = { error ->
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 
-    private fun toggleFavorite() {
-        isFavorite = !isFavorite
+    private fun updateWishlistButton() {
+        val isInWishlist = WishlistManager.isInWishlist(product.id)
         binding.btnFavorite.setImageResource(
-            if (isFavorite) android.R.drawable.btn_star_big_on
+            if (isInWishlist) android.R.drawable.btn_star_big_on
             else android.R.drawable.btn_star_big_off
         )
-        Toast.makeText(
-            this,
-            if (isFavorite) "Added to favorites" else "Removed from favorites",
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
-    // ViewPager Adapter for product images
     inner class ProductImageAdapter(private val images: List<String>) :
         RecyclerView.Adapter<ProductImageAdapter.ImageViewHolder>() {
 
@@ -175,8 +322,6 @@ class ProductDetailActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-            // For now, just show placeholder image
-            // In a real app, you would load the image from URL using Glide or Coil
             holder.binding.imageView.setImageResource(R.drawable.bg_image_1)
             holder.binding.imageView.scaleType = ImageView.ScaleType.CENTER_CROP
         }
@@ -184,4 +329,3 @@ class ProductDetailActivity : AppCompatActivity() {
         override fun getItemCount() = if (images.isEmpty()) 1 else images.size
     }
 }
-

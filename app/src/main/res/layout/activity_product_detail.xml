@@ -377,135 +377,25 @@
 
                     </LinearLayout>
 
-                    <!-- Review 1 -->
-                    <LinearLayout
+                    <!-- Reviews RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/reviews_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="16dp">
+                        android:nestedScrollingEnabled="false" />
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@mipmap/ic_launcher"
-                            android:background="@drawable/button_primary"
-                            android:layout_marginEnd="12dp" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:layout_marginBottom="4dp">
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Arjun Sharma"
-                                    android:textColor="@color/text_dark"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="⭐⭐⭐⭐⭐"
-                                    android:textSize="12sp" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="VERIFIED BUYER"
-                                android:textColor="@color/text_gray"
-                                android:textSize="10sp"
-                                android:letterSpacing="0.05"
-                                android:layout_marginBottom="4dp" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="&quot;The water stays naturally cool even in peak summer. The design is absolutely stunning in person!&quot;"
-                                android:textColor="@color/text_gray"
-                                android:textSize="12sp"
-                                android:fontFamily="serif" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <!-- Review 2 -->
-                    <LinearLayout
+                    <!-- No Reviews Text -->
+                    <TextView
+                        android:id="@+id/no_reviews_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@mipmap/ic_launcher"
-                            android:background="@drawable/button_primary"
-                            android:layout_marginEnd="12dp" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:layout_marginBottom="4dp">
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Priya Patel"
-                                    android:textColor="@color/text_dark"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="⭐⭐⭐⭐⭐"
-                                    android:textSize="12sp" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="VERIFIED BUYER"
-                                android:textColor="@color/text_gray"
-                                android:textSize="10sp"
-                                android:letterSpacing="0.05"
-                                android:layout_marginBottom="4dp" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="&quot;Exceeded my expectations. It's thick, sturdy, and the hand-painting is very intricate. Packed very well too.&quot;"
-                                android:textColor="@color/text_gray"
-                                android:textSize="12sp"
-                                android:fontFamily="serif"
-                                android:lineSpacingExtra="2dp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
+                        android:text="No reviews yet. Be the first to review!"
+                        android:textColor="@color/text_gray"
+                        android:textSize="14sp"
+                        android:textStyle="italic"
+                        android:gravity="center"
+                        android:padding="24dp"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
