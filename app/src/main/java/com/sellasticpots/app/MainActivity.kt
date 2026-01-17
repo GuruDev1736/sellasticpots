@@ -16,10 +16,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.sellasticpots.app.databinding.ActivityMainBinding
 import com.sellasticpots.app.fragments.MyCartFragment
 import com.sellasticpots.app.fragments.ProductsFragment
 import com.sellasticpots.app.fragments.WishlistFragment
+import com.sellasticpots.app.models.User
 import com.sellasticpots.app.utils.CartManager
 import com.sellasticpots.app.utils.WishlistManager
 
@@ -27,6 +32,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +57,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
 
         val currentUser = auth.currentUser
         if (currentUser == null) {
@@ -78,9 +85,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        val headerView = binding.navView.getHeaderView(0)
-        val navHeaderEmail = headerView.findViewById<TextView>(R.id.nav_header_email)
-        navHeaderEmail.text = currentUser.email ?: "No email"
+        loadUserDataFromDatabase(currentUser.uid)
 
         if (savedInstanceState == null) {
             val openCart = intent.getBooleanExtra("openCart", false)
@@ -175,6 +180,43 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             binding.cartBadge.visibility = android.view.View.GONE
         }
+    }
+
+    private fun loadUserDataFromDatabase(userId: String) {
+        val headerView = binding.navView.getHeaderView(0)
+        val navHeaderName = headerView.findViewById<TextView>(R.id.nav_header_name)
+        val navHeaderMobile = headerView.findViewById<TextView>(R.id.nav_header_mobile)
+        val navHeaderEmail = headerView.findViewById<TextView>(R.id.nav_header_email)
+
+        database.reference.child("users").child(userId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    if (user != null) {
+                        navHeaderName.text = user.fullName.ifEmpty {
+                            user.username.ifEmpty { "Guest User" }
+                        }
+                        navHeaderMobile.text = user.phoneNo.ifEmpty { "+1 234 567 8900" }
+                        navHeaderEmail.text = user.email.ifEmpty { "user@example.com" }
+                    } else {
+                        val currentUser = auth.currentUser
+                        navHeaderName.text = currentUser?.displayName
+                            ?: currentUser?.email?.substringBefore("@")?.replaceFirstChar { it.uppercase() }
+                            ?: "Guest User"
+                        navHeaderMobile.text = currentUser?.phoneNumber ?: "+1 234 567 8900"
+                        navHeaderEmail.text = currentUser?.email ?: "user@example.com"
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    val currentUser = auth.currentUser
+                    navHeaderName.text = currentUser?.displayName
+                        ?: currentUser?.email?.substringBefore("@")?.replaceFirstChar { it.uppercase() }
+                        ?: "Guest User"
+                    navHeaderMobile.text = currentUser?.phoneNumber ?: "+1 234 567 8900"
+                    navHeaderEmail.text = currentUser?.email ?: "user@example.com"
+                }
+            })
     }
 }
 

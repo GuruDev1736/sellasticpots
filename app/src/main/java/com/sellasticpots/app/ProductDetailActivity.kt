@@ -68,9 +68,6 @@ class ProductDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        // Hide share button
-        binding.btnShare.visibility = android.view.View.GONE
-
         // Setup wishlist button
         updateWishlistButton()
         binding.btnFavorite.setOnClickListener {
@@ -82,8 +79,8 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.productCategory.text = product.category.uppercase()
         binding.productName.text = product.name
         binding.productRating.text = "${product.rating} (${product.reviews} reviews)"
-        binding.productPrice.text = "$${product.price}"
-        binding.totalPrice.text = "$${product.price * quantity}"
+        binding.productPrice.text = "₹${product.price}"
+        binding.totalPrice.text = "₹${product.price * quantity}"
         binding.productDescription.text = product.description
     }
 
@@ -98,6 +95,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun setupQuantityControls() {
         binding.quantityText.text = quantity.toString()
+        updateDecreaseButtonState()
 
         binding.btnDecrease.setOnClickListener {
             if (quantity > 1) {
@@ -114,7 +112,18 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun updateQuantity() {
         binding.quantityText.text = quantity.toString()
-        binding.totalPrice.text = "$${String.format("%.2f", product.price * quantity)}"
+        binding.totalPrice.text = "₹${String.format("%.2f", product.price * quantity)}"
+        updateDecreaseButtonState()
+    }
+
+    private fun updateDecreaseButtonState() {
+        if (quantity <= 1) {
+            binding.btnDecrease.isEnabled = false
+            binding.btnDecrease.alpha = 0.3f
+        } else {
+            binding.btnDecrease.isEnabled = true
+            binding.btnDecrease.alpha = 1.0f
+        }
     }
 
     private fun setupButtons() {

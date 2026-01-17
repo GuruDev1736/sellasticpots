@@ -40,24 +40,67 @@ object ReviewManager {
 
         val reviewId = reviewsRef.child(productId).push().key ?: return
 
-        val review = Review(
-            id = reviewId,
-            productId = productId,
-            userId = currentUser.uid,
-            userName = currentUser.displayName ?: currentUser.email?.substringBefore("@") ?: "Anonymous",
-            userEmail = currentUser.email ?: "",
-            rating = rating,
-            reviewText = reviewText,
-            timestamp = System.currentTimeMillis(),
-            isVerifiedPurchase = true // TODO: Check actual purchase history
-        )
+        // Fetch user's actual name from database
+        database.reference.child("users").child(currentUser.uid).get()
+            .addOnSuccessListener { snapshot ->
+                val user = snapshot.getValue(com.sellasticpots.app.models.User::class.java)
 
-        reviewsRef.child(productId).child(reviewId).setValue(review)
-            .addOnSuccessListener {
-                onSuccess()
+                // Get user name with proper fallback chain
+                val userName = when {
+                    user?.fullName?.isNotBlank() == true -> user.fullName
+                    user?.username?.isNotBlank() == true -> user.username
+                    currentUser.displayName?.isNotBlank() == true -> currentUser.displayName!!
+                    currentUser.email?.isNotBlank() == true -> currentUser.email!!.substringBefore("@")
+                    else -> "Anonymous User"
+                }
+
+                val review = Review(
+                    id = reviewId,
+                    productId = productId,
+                    userId = currentUser.uid,
+                    userName = userName,
+                    userEmail = currentUser.email ?: "",
+                    rating = rating,
+                    reviewText = reviewText,
+                    timestamp = System.currentTimeMillis(),
+                    isVerifiedPurchase = true
+                )
+
+                reviewsRef.child(productId).child(reviewId).setValue(review)
+                    .addOnSuccessListener {
+                        onSuccess()
+                    }
+                    .addOnFailureListener { e ->
+                        onError(e.message ?: "Failed to submit review")
+                    }
             }
-            .addOnFailureListener { e ->
-                onError(e.message ?: "Failed to submit review")
+            .addOnFailureListener {
+                // If database fetch fails, use fallback
+                val userName = when {
+                    currentUser.displayName?.isNotBlank() == true -> currentUser.displayName!!
+                    currentUser.email?.isNotBlank() == true -> currentUser.email!!.substringBefore("@")
+                    else -> "Anonymous User"
+                }
+
+                val review = Review(
+                    id = reviewId,
+                    productId = productId,
+                    userId = currentUser.uid,
+                    userName = userName,
+                    userEmail = currentUser.email ?: "",
+                    rating = rating,
+                    reviewText = reviewText,
+                    timestamp = System.currentTimeMillis(),
+                    isVerifiedPurchase = true
+                )
+
+                reviewsRef.child(productId).child(reviewId).setValue(review)
+                    .addOnSuccessListener {
+                        onSuccess()
+                    }
+                    .addOnFailureListener { e ->
+                        onError(e.message ?: "Failed to submit review")
+                    }
             }
     }
 

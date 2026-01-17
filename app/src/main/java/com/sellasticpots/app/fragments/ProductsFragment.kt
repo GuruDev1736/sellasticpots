@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sellasticpots.app.R
 import com.sellasticpots.app.adapters.ProductsAdapter
 import com.sellasticpots.app.databinding.FragmentProductsBinding
 import com.sellasticpots.app.models.Product
@@ -32,6 +33,7 @@ class ProductsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        setupSwipeRefresh()
         loadSampleProducts()
         setupCategoryChips()
     }
@@ -46,6 +48,32 @@ class ProductsFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = productsAdapter
         }
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefreshLayout.setColorSchemeResources(
+            R.color.secondary,
+            R.color.primary,
+            R.color.text_dark
+        )
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            refreshProducts()
+        }
+    }
+
+    private fun refreshProducts() {
+        // Reload products and refresh adapter to get updated ratings
+        loadSampleProducts()
+
+        // Notify adapter to rebind all items (this will trigger rating fetch)
+        productsAdapter.notifyDataSetChanged()
+
+        // Stop refresh animation after a short delay
+        binding.swipeRefreshLayout.postDelayed({
+            binding.swipeRefreshLayout.isRefreshing = false
+            Toast.makeText(requireContext(), "Products refreshed!", Toast.LENGTH_SHORT).show()
+        }, 1000)
     }
 
     private fun loadSampleProducts() {
@@ -195,4 +223,3 @@ class ProductsFragment : Fragment() {
         _binding = null
     }
 }
-

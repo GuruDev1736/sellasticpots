@@ -19,7 +19,7 @@ class WishlistAdapter(
 
         fun bind(product: Product) {
             binding.productName.text = product.name
-            binding.productPrice.text = "$${product.price}"
+            binding.productPrice.text = "₹${product.price}"
             binding.productRating.text = "${product.rating} ★"
             binding.productCategory.text = product.category
 

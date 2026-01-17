@@ -62,10 +62,10 @@ class MyCartFragment : Fragment() {
         }
 
         CartManager.totalPrice.observe(viewLifecycleOwner) { total ->
-            binding.subtotalValue.text = String.format("$%.2f", total)
+            binding.subtotalValue.text = String.format("₹%.2f", total)
             // For now, delivery is free
-            binding.deliveryValue.text = "$0.00"
-            binding.totalValue.text = String.format("$%.2f", total)
+            binding.deliveryValue.text = "₹0.00"
+            binding.totalValue.text = String.format("₹%.2f", total)
         }
     }
 

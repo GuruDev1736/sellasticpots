@@ -18,9 +18,18 @@ class CartAdapter(
 
         fun bind(cartItem: CartItem) {
             binding.productName.text = cartItem.product.name
-            binding.productPrice.text = String.format("$%.2f", cartItem.product.price)
+            binding.productPrice.text = String.format("₹%.2f", cartItem.product.price)
             binding.quantityText.text = cartItem.quantity.toString()
-            binding.totalPrice.text = String.format("$%.2f", cartItem.totalPrice)
+            binding.totalPrice.text = String.format("₹%.2f", cartItem.totalPrice)
+
+            // Disable decrease button if quantity is 1
+            if (cartItem.quantity <= 1) {
+                binding.btnDecrease.isEnabled = false
+                binding.btnDecrease.alpha = 0.3f
+            } else {
+                binding.btnDecrease.isEnabled = true
+                binding.btnDecrease.alpha = 1.0f
+            }
 
             binding.btnDecrease.setOnClickListener {
                 if (cartItem.quantity > 1) {

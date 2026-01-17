@@ -14,7 +14,13 @@ class ReviewsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(review: Review) {
-            binding.reviewerName.text = review.userName
+            // Handle empty username with fallback
+            val displayName = when {
+                review.userName.isNotBlank() -> review.userName
+                review.userEmail.isNotBlank() -> review.userEmail.substringBefore("@")
+                else -> "Anonymous User"
+            }
+            binding.reviewerName.text = displayName
             binding.reviewDate.text = review.getFormattedDate()
             binding.reviewRating.text = review.getStarRating()
             binding.reviewText.text = "\"${review.reviewText}\""
