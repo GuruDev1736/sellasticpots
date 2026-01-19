@@ -1,12 +1,18 @@
 package com.sellasticpots.app.fragments
 
+import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sellasticpots.app.CheckoutActivity
 import com.sellasticpots.app.adapters.CartAdapter
+import com.sellasticpots.app.adapters.CheckoutSummaryAdapter
+import com.sellasticpots.app.databinding.DialogCheckoutConfirmationBinding
 import com.sellasticpots.app.databinding.FragmentMyCartBinding
 import com.sellasticpots.app.utils.CartManager
 
@@ -71,13 +77,56 @@ class MyCartFragment : Fragment() {
 
     private fun setupCheckoutButton() {
         binding.btnCheckout.setOnClickListener {
-            // TODO: Implement checkout functionality
-            android.widget.Toast.makeText(
-                requireContext(),
-                "Checkout feature coming soon!",
-                android.widget.Toast.LENGTH_SHORT
-            ).show()
+            val cartItems = CartManager.cartItems.value
+            if (cartItems.isNullOrEmpty()) {
+                android.widget.Toast.makeText(
+                    requireContext(),
+                    "Your cart is empty",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+            showCheckoutConfirmationDialog(cartItems)
         }
+    }
+
+    private fun showCheckoutConfirmationDialog(cartItems: List<com.sellasticpots.app.models.CartItem>) {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+        val dialogBinding = DialogCheckoutConfirmationBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+
+        val adapter = CheckoutSummaryAdapter(cartItems)
+        dialogBinding.checkoutItemsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            this.adapter = adapter
+        }
+
+        val totalItems = cartItems.sumOf { it.quantity }
+        val totalPrice = CartManager.totalPrice.value ?: 0.0
+
+        dialogBinding.totalItemsText.text = totalItems.toString()
+        dialogBinding.totalPriceText.text = String.format("₹%.2f", totalPrice)
+
+        dialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnConfirm.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(requireContext(), CheckoutActivity::class.java)
+            intent.putParcelableArrayListExtra("cartItems", ArrayList(cartItems))
+            intent.putExtra("totalPrice", totalPrice)
+            startActivity(intent)
+        }
+
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        dialog.show()
     }
 
     override fun onDestroyView() {

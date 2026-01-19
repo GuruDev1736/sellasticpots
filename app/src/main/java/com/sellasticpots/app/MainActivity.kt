@@ -22,10 +22,13 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.sellasticpots.app.databinding.ActivityMainBinding
 import com.sellasticpots.app.fragments.MyCartFragment
+import com.sellasticpots.app.fragments.MyOrdersFragment
 import com.sellasticpots.app.fragments.ProductsFragment
+import com.sellasticpots.app.fragments.ProfileFragment
 import com.sellasticpots.app.fragments.WishlistFragment
 import com.sellasticpots.app.models.User
 import com.sellasticpots.app.utils.CartManager
+import com.sellasticpots.app.utils.OrderManager
 import com.sellasticpots.app.utils.WishlistManager
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -69,6 +72,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         CartManager.initialize()
 
         WishlistManager.initialize()
+
+        OrderManager.initialize()
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -145,16 +150,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 binding.toolbarTitle.text = "My Cart"
             }
             R.id.nav_orders -> {
+                loadFragment(MyOrdersFragment())
                 binding.toolbarTitle.text = "My Orders"
-                Toast.makeText(this, "Orders feature coming soon", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_wishlist -> {
                 loadFragment(WishlistFragment())
                 binding.toolbarTitle.text = "My Wishlist"
             }
             R.id.nav_profile -> {
+                loadFragment(ProfileFragment())
                 binding.toolbarTitle.text = "Profile"
-                Toast.makeText(this, "Profile feature coming soon", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_logout -> {
                 auth.signOut()

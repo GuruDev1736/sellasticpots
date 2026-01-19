@@ -61,6 +61,30 @@
             android:exported="false"
             android:theme="@style/Theme.Sellasticpots" />
 
+        <!-- Privacy Policy Activity -->
+        <activity
+            android:name=".PrivacyPolicyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Sellasticpots" />
+
+        <!-- Terms and Conditions Activity -->
+        <activity
+            android:name=".TermsConditionsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Sellasticpots" />
+
+        <!-- Checkout Activity -->
+        <activity
+            android:name=".CheckoutActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Sellasticpots" />
+
+        <!-- Order Detail Activity -->
+        <activity
+            android:name=".OrderDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Sellasticpots" />
+
     </application>
 
 </manifest>
