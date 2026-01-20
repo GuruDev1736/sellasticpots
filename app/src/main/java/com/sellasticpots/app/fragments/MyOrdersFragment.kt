@@ -106,7 +106,11 @@ class MyOrdersFragment : Fragment() {
     }
 
     private fun observeOrders() {
+        binding.progressBar.visibility = View.VISIBLE
+
         OrderManager.orders.observe(viewLifecycleOwner) { orders ->
+            binding.progressBar.visibility = View.GONE
+
             if (orders.isEmpty()) {
                 binding.emptyOrdersLayout.visibility = View.VISIBLE
                 binding.ordersRecyclerView.visibility = View.GONE

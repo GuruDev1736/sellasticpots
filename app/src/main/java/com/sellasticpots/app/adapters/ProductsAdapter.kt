@@ -8,6 +8,7 @@ import com.sellasticpots.app.ProductDetailActivity
 import com.sellasticpots.app.databinding.ItemProductBinding
 import com.sellasticpots.app.models.Product
 import com.sellasticpots.app.utils.ReviewManager
+import androidx.core.net.toUri
 
 class ProductsAdapter(
     private var products: List<Product>,
@@ -22,6 +23,15 @@ class ProductsAdapter(
         fun bind(product: Product) {
             binding.productName.text = product.name
             binding.productPrice.text = "₹${product.price}"
+
+            // Load product image
+            if (product.imageUrl.isNotEmpty()) {
+                val imageUri = product.imageUrl.toUri()
+                val resourceId = imageUri.lastPathSegment?.toIntOrNull()
+                if (resourceId != null) {
+                    binding.productImage.setImageResource(resourceId)
+                }
+            }
 
             // Load dynamic rating from Firebase
             loadProductRating(product.id)

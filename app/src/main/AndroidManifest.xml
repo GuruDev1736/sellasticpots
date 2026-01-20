@@ -61,15 +61,9 @@
             android:exported="false"
             android:theme="@style/Theme.Sellasticpots" />
 
-        <!-- Privacy Policy Activity -->
+        <!-- Contact Us Activity -->
         <activity
-            android:name=".PrivacyPolicyActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Sellasticpots" />
-
-        <!-- Terms and Conditions Activity -->
-        <activity
-            android:name=".TermsConditionsActivity"
+            android:name=".ContactUsActivity"
             android:exported="false"
             android:theme="@style/Theme.Sellasticpots" />
 

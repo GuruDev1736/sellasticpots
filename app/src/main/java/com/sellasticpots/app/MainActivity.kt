@@ -3,6 +3,7 @@ package com.sellasticpots.app
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -15,6 +16,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -199,6 +201,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navHeaderName = headerView.findViewById<TextView>(R.id.nav_header_name)
         val navHeaderMobile = headerView.findViewById<TextView>(R.id.nav_header_mobile)
         val navHeaderEmail = headerView.findViewById<TextView>(R.id.nav_header_email)
+        val navHeaderProfileImage = headerView.findViewById<ImageView>(R.id.nav_header_profile_image)
 
         database.reference.child("users").child(userId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -210,6 +213,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         }
                         navHeaderMobile.text = user.phoneNo.ifEmpty { "+1 234 567 8900" }
                         navHeaderEmail.text = user.email.ifEmpty { "user@example.com" }
+                        navHeaderProfileImage.setImageResource(R.drawable.ic_profile)
                     } else {
                         val currentUser = auth.currentUser
                         navHeaderName.text = currentUser?.displayName
@@ -217,6 +221,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             ?: "Guest User"
                         navHeaderMobile.text = currentUser?.phoneNumber ?: "+1 234 567 8900"
                         navHeaderEmail.text = currentUser?.email ?: "user@example.com"
+                        navHeaderProfileImage.setImageResource(R.drawable.ic_profile)
                     }
                 }
 
@@ -227,6 +232,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         ?: "Guest User"
                     navHeaderMobile.text = currentUser?.phoneNumber ?: "+1 234 567 8900"
                     navHeaderEmail.text = currentUser?.email ?: "user@example.com"
+                    navHeaderProfileImage.setImageResource(R.drawable.ic_profile)
                 }
             })
     }

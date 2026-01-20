@@ -2,18 +2,19 @@ package com.sellasticpots.app.fragments
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.sellasticpots.app.ContactUsActivity
 import com.sellasticpots.app.LoginActivity
-import com.sellasticpots.app.PrivacyPolicyActivity
 import com.sellasticpots.app.R
-import com.sellasticpots.app.TermsConditionsActivity
 import com.sellasticpots.app.databinding.FragmentProfileBinding
 import com.sellasticpots.app.models.User
 
@@ -46,10 +47,8 @@ class ProfileFragment : Fragment() {
     private fun loadUserData() {
         val currentUser = auth.currentUser ?: return
 
-        // Set email immediately
         binding.userEmail.text = currentUser.email ?: "No email"
 
-        // Fetch user data from database
         database.reference.child("users").child(currentUser.uid).get()
             .addOnSuccessListener { snapshot ->
                 val user = snapshot.getValue(User::class.java)
@@ -57,58 +56,54 @@ class ProfileFragment : Fragment() {
                     binding.userName.text = user.fullName.ifEmpty {
                         user.username.ifEmpty { "Guest User" }
                     }
+                    binding.profileImage.setImageResource(R.drawable.ic_profile)
                 } else {
                     binding.userName.text = currentUser.displayName
                         ?: currentUser.email?.substringBefore("@")
                         ?: "Guest User"
+                    binding.profileImage.setImageResource(R.drawable.ic_profile)
                 }
             }
             .addOnFailureListener {
                 binding.userName.text = currentUser.displayName
                     ?: currentUser.email?.substringBefore("@")
                     ?: "Guest User"
+                binding.profileImage.setImageResource(R.drawable.ic_profile)
             }
     }
 
     private fun setupClickListeners() {
-        // Edit Profile
-        binding.btnEditProfile.setOnClickListener {
-            Toast.makeText(requireContext(), "Edit Profile feature coming soon!", Toast.LENGTH_SHORT).show()
-        }
-
-        // Personal Information
-        binding.cardPersonalInfo.setOnClickListener {
-            Toast.makeText(requireContext(), "Personal Information feature coming soon!", Toast.LENGTH_SHORT).show()
-        }
-
-        // My Orders
-        binding.cardMyOrders.setOnClickListener {
-            Toast.makeText(requireContext(), "My Orders feature coming soon!", Toast.LENGTH_SHORT).show()
-        }
-
-        // Privacy Policy
         binding.cardPrivacyPolicy.setOnClickListener {
-            startActivity(Intent(requireContext(), PrivacyPolicyActivity::class.java))
+            openCustomTab("https://potssellastic.in/privacy-policy/")
         }
 
-        // Terms and Conditions
-        binding.cardTermsConditions.setOnClickListener {
-            startActivity(Intent(requireContext(), TermsConditionsActivity::class.java))
+        binding.cardVisitWebsite.setOnClickListener {
+            openCustomTab("https://potssellastic.in/")
         }
 
-        // Delete Account
+        binding.cardContactUs.setOnClickListener {
+            startActivity(Intent(requireContext(), ContactUsActivity::class.java))
+        }
+
         binding.cardDeleteAccount.setOnClickListener {
             showDeleteAccountDialog()
         }
 
-        // Logout
         binding.btnLogout.setOnClickListener {
             showLogoutDialog()
         }
     }
 
+    private fun openCustomTab(url: String) {
+        val customTabsIntent = CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .setUrlBarHidingEnabled(false)
+            .build()
+        customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
+    }
+
     private fun showDeleteAccountDialog() {
-        AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Delete Account")
             .setMessage("Are you sure you want to delete your account? This action cannot be undone. All your data including orders, reviews, and wishlists will be permanently deleted.")
             .setPositiveButton("Delete") { _, _ ->
@@ -116,7 +111,16 @@ class ProfileFragment : Fragment() {
             }
             .setNegativeButton("Cancel", null)
             .setIcon(android.R.drawable.ic_dialog_alert)
-            .show()
+            .create()
+
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(
+            resources.getColor(R.color.secondary, null)
+        )
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(
+            resources.getColor(R.color.secondary, null)
+        )
     }
 
     private fun deleteAccount() {
@@ -179,14 +183,23 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showLogoutDialog() {
-        AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout?")
             .setPositiveButton("Logout") { _, _ ->
                 logout()
             }
             .setNegativeButton("Cancel", null)
-            .show()
+            .create()
+
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(
+            resources.getColor(R.color.secondary, null)
+        )
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(
+            resources.getColor(R.color.secondary, null)
+        )
     }
 
     private fun logout() {

@@ -238,17 +238,25 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun submitReview() {
         val reviewText = binding.reviewText.text.toString().trim()
 
+        binding.btnSubmitReview.isEnabled = false
+        binding.btnSubmitReview.text = "Submitting..."
+
         ReviewManager.submitReview(
             productId = product.id,
             rating = selectedRating,
             reviewText = reviewText,
             onSuccess = {
+                binding.btnSubmitReview.isEnabled = true
+                binding.btnSubmitReview.text = "Submit Review"
+                loadReviews()
                 Toast.makeText(this, "Review submitted! Thank you!", Toast.LENGTH_SHORT).show()
                 binding.reviewText.text?.clear()
                 selectedRating = 0f
                 updateRatingStars()
             },
             onError = { error ->
+                binding.btnSubmitReview.isEnabled = true
+                binding.btnSubmitReview.text = "Submit Review"
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
             }
         )
@@ -264,7 +272,11 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun loadReviews() {
+        binding.reviewsProgressBar.visibility = android.view.View.VISIBLE
+
         ReviewManager.getReviews(product.id) { loadedReviews ->
+            binding.reviewsProgressBar.visibility = android.view.View.GONE
+
             reviews.clear()
             reviews.addAll(loadedReviews)
 

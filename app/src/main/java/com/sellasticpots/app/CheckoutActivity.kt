@@ -69,8 +69,11 @@ class CheckoutActivity : AppCompatActivity() {
     private fun loadUserData() {
         val userId = auth.currentUser?.uid ?: return
 
+        binding.progressBar.visibility = android.view.View.VISIBLE
+
         database.reference.child("users").child(userId).get()
             .addOnSuccessListener { snapshot ->
+                binding.progressBar.visibility = android.view.View.GONE
                 val user = snapshot.getValue(User::class.java)
                 user?.let {
                     binding.etFullName.setText(it.fullName)
@@ -79,6 +82,7 @@ class CheckoutActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
+                binding.progressBar.visibility = android.view.View.GONE
                 val currentUser = auth.currentUser
                 if (currentUser?.email != null) {
                     binding.etEmail.setText(currentUser.email)

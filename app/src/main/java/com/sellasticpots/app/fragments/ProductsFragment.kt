@@ -77,112 +77,74 @@ class ProductsFragment : Fragment() {
     }
 
     private fun loadSampleProducts() {
-        // Sample products
         allProducts.clear()
         allProducts.addAll(
             listOf(
                 Product(
                     id = "1",
-                    name = "Terracotta Matka",
-                    price = 42.00,
+                    name = "Cooking Pots",
+                    price = 599.00,
                     rating = 4.8,
-                    reviews = 124,
-                    category = "Matkas",
-                    imageUrl = "",
-                    description = "Handcrafted by master potters from the Kutch region, this matka is made from 100% natural organic clay. Each piece is hand-painted with traditional motifs using lead-free pigments. The porous nature of the clay allows for natural evaporation, cooling water perfectly for a refreshing drink.",
-                    images = listOf("", "", ""),
-                    tags = listOf("100% ORGANIC", "LEAD FREE"),
+                    reviews = 156,
+                    category = "Cooking",
+                    imageUrl = "android.resource://com.sellasticpots.app/" + R.drawable.cooking_pot,
+                    description = "Traditional clay cooking pots perfect for slow-cooking curries, dals, rice, and more. Experience the authentic taste of home cooked meals.",
+                    images = listOf(
+                        "android.resource://com.sellasticpots.app/" + R.drawable.cooking_pot,
+                        "android.resource://com.sellasticpots.app/" + R.drawable.cooking_pot,
+                        "android.resource://com.sellasticpots.app/" + R.drawable.cooking_pot
+                    ),
+                    tags = listOf("TRADITIONAL", "AUTHENTIC TASTE"),
                     freeDelivery = true
                 ),
                 Product(
                     id = "2",
-                    name = "Minimal Clay Vase",
-                    price = 38.50,
+                    name = "Water Pots (Matka)",
+                    price = 449.00,
                     rating = 4.9,
-                    reviews = 86,
-                    category = "Vases",
-                    imageUrl = "",
-                    description = "A stunning minimalist vase crafted from premium clay. Perfect for displaying your favorite flowers or as a standalone decorative piece. The elegant design complements any interior style.",
-                    images = listOf("", ""),
-                    tags = listOf("HANDCRAFTED", "ECO-FRIENDLY"),
+                    reviews = 203,
+                    category = "Matkas",
+                    imageUrl = "android.resource://com.sellasticpots.app/" + R.drawable.water_pot,
+                    description = "Traditional matka water pots that naturally cool water and add beneficial minerals. The healthy, eco-friendly way to stay hydrated.",
+                    images = listOf(
+                        "android.resource://com.sellasticpots.app/" + R.drawable.water_pot,
+                        "android.resource://com.sellasticpots.app/" + R.drawable.water_pot
+                    ),
+                    tags = listOf("ECO-FRIENDLY", "NATURAL COOLING"),
                     freeDelivery = true
                 ),
                 Product(
                     id = "3",
-                    name = "Traditional Tea Set",
-                    price = 65.00,
-                    rating = 4.7,
-                    reviews = 215,
-                    category = "Dinnerware",
-                    imageUrl = "",
-                    description = "Complete tea serving set handcrafted from natural clay. Includes teapot and 4 cups. Each piece features intricate traditional patterns. Perfect for serving tea in authentic style.",
-                    images = listOf("", "", "", ""),
-                    tags = listOf("COMPLETE SET", "TRADITIONAL"),
+                    name = "Serving Bowls",
+                    price = 499.00,
+                    rating = 4.9,
+                    reviews = 187,
+                    category = "Matkas",
+                    imageUrl = "android.resource://com.sellasticpots.app/" + R.drawable.serving_bowls,
+                    description = "Beautiful earthen bowls for serving traditional Indian meals. Keep your food warm longer while adding rustic charm to your dining table.",
+                    images = listOf(
+                        "android.resource://com.sellasticpots.app/" + R.drawable.serving_bowls,
+                        "android.resource://com.sellasticpots.app/" + R.drawable.serving_bowls,
+                        "android.resource://com.sellasticpots.app/" + R.drawable.serving_bowls
+                    ),
+                    tags = listOf("HEALTHY", "MINERAL RICH"),
                     freeDelivery = true
                 ),
                 Product(
                     id = "4",
-                    name = "Floral Wall Plate",
-                    price = 29.99,
+                    name = "Decorative Pots",
+                    price = 799.00,
                     rating = 5.0,
-                    reviews = 52,
-                    category = "Dinnerware",
-                    imageUrl = "",
-                    description = "Decorative wall plate with beautiful hand-painted floral motifs. Made from high-quality terracotta and finished with a protective glaze. Adds a touch of artisanal elegance to any wall.",
-                    images = listOf("", ""),
-                    tags = listOf("DECORATIVE", "HANDPAINTED"),
-                    freeDelivery = true
-                ),
-                Product(
-                    id = "5",
-                    name = "Glazed Soup Bowls",
-                    price = 18.00,
-                    rating = 4.6,
-                    reviews = 112,
-                    category = "Dinnerware",
-                    imageUrl = "",
-                    description = "Set of 4 soup bowls with beautiful glazed finish. Microwave and dishwasher safe. Perfect size for soups, cereals, and desserts.",
-                    images = listOf(""),
-                    tags = listOf("SET OF 4", "DISHWASHER SAFE"),
-                    freeDelivery = true
-                ),
-                Product(
-                    id = "6",
-                    name = "Rustic Vase",
-                    price = 45.00,
-                    rating = 4.8,
-                    reviews = 98,
-                    category = "Vases",
-                    imageUrl = "",
-                    description = "Hand-crafted rustic vase with natural clay texture. Each piece is unique with its own character. Perfect for dried flowers or as a statement piece.",
-                    images = listOf("", ""),
-                    tags = listOf("RUSTIC", "UNIQUE"),
-                    freeDelivery = true
-                ),
-                Product(
-                    id = "7",
-                    name = "Clay Water Pot",
-                    price = 35.00,
-                    rating = 4.7,
-                    reviews = 145,
-                    category = "Matkas",
-                    imageUrl = "",
-                    description = "Traditional clay water pot that keeps water naturally cool. Made from porous clay that allows for evaporation cooling. Eco-friendly alternative to plastic bottles.",
-                    images = listOf("", ""),
-                    tags = listOf("ECO-FRIENDLY", "COOLING"),
-                    freeDelivery = true
-                ),
-                Product(
-                    id = "8",
-                    name = "Ceramic Dinner Set",
-                    price = 120.00,
-                    rating = 4.9,
-                    reviews = 203,
-                    category = "Dinnerware",
-                    imageUrl = "",
-                    description = "Complete 16-piece dinner set handcrafted from premium ceramic. Includes 4 dinner plates, 4 side plates, 4 bowls, and 4 cups. Elegant design suitable for everyday use and special occasions.",
-                    images = listOf("", "", ""),
-                    tags = listOf("16-PIECE SET", "PREMIUM"),
+                    reviews = 124,
+                    category = "Decorative",
+                    imageUrl = "android.resource://com.sellasticpots.app/" + R.drawable.decorative_pot,
+                    description = "Hand-painted and artistically designed earthen pots for home décor. Add a touch of traditional elegance to any space.",
+                    images = listOf(
+                        "android.resource://com.sellasticpots.app/" + R.drawable.decorative_pot,
+                        "android.resource://com.sellasticpots.app/" + R.drawable.decorative_pot,
+                        "android.resource://com.sellasticpots.app/" + R.drawable.decorative_pot
+                    ),
+                    tags = listOf("HAND-PAINTED", "ELEGANT"),
                     freeDelivery = true
                 )
             )
@@ -191,13 +153,12 @@ class ProductsFragment : Fragment() {
     }
 
     private fun setupCategoryChips() {
-        // Set up chip listeners
         binding.chipAllItems.setOnClickListener {
             filterProducts("All")
         }
 
         binding.chipVases.setOnClickListener {
-            filterProducts("Vases")
+            filterProducts("Cooking")
         }
 
         binding.chipMatkas.setOnClickListener {
@@ -205,7 +166,7 @@ class ProductsFragment : Fragment() {
         }
 
         binding.chipDinnerware.setOnClickListener {
-            filterProducts("Dinnerware")
+            filterProducts("Decorative")
         }
     }
 

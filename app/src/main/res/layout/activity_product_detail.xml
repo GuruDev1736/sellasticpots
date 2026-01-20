@@ -367,6 +367,16 @@
 
                     </LinearLayout>
 
+                    <!-- Reviews Loading Progress -->
+                    <ProgressBar
+                        android:id="@+id/reviewsProgressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:visibility="gone" />
+
                     <!-- Reviews RecyclerView -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/reviews_recycler_view"
