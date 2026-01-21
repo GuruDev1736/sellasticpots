@@ -10,7 +10,8 @@ import com.sellasticpots.app.models.Order
 
 class OrdersAdapter(
     private val onOrderClick: (Order) -> Unit,
-    private val onCancelOrder: (Order) -> Unit
+    private val onCancelOrder: (Order) -> Unit,
+    private val onDownloadReceipt: (Order) -> Unit
 ) : RecyclerView.Adapter<OrdersAdapter.OrderViewHolder>() {
 
     private var orders = listOf<Order>()
@@ -18,7 +19,7 @@ class OrdersAdapter(
     class OrderViewHolder(private val binding: ItemOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(order: Order, onOrderClick: (Order) -> Unit, onCancelOrder: (Order) -> Unit) {
+        fun bind(order: Order, onOrderClick: (Order) -> Unit, onCancelOrder: (Order) -> Unit, onDownloadReceipt: (Order) -> Unit) {
             val formattedOrderId = formatOrderId(order.orderId)
             binding.orderIdText.text = formattedOrderId
             binding.orderDateText.text = order.getFormattedDate()
@@ -55,6 +56,10 @@ class OrdersAdapter(
                 onOrderClick(order)
             }
 
+            binding.btnDownloadReceipt.setOnClickListener {
+                onDownloadReceipt(order)
+            }
+
             binding.btnCancelOrder.setOnClickListener {
                 onCancelOrder(order)
             }
@@ -76,7 +81,7 @@ class OrdersAdapter(
     }
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
-        holder.bind(orders[position], onOrderClick, onCancelOrder)
+        holder.bind(orders[position], onOrderClick, onCancelOrder, onDownloadReceipt)
     }
 
     override fun getItemCount() = orders.size
