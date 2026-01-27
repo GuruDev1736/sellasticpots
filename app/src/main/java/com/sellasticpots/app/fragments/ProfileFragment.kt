@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.database.FirebaseDatabase
 import com.sellasticpots.app.ContactUsActivity
 import com.sellasticpots.app.LoginActivity
@@ -165,11 +166,16 @@ class ProfileFragment : Fragment() {
                     }
                     .addOnFailureListener { e ->
                         progressDialog.dismiss()
-                        Toast.makeText(
-                            requireContext(),
-                            "Failed to delete account: ${e.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
+
+                        if (e is FirebaseAuthRecentLoginRequiredException) {
+                            showSessionExpiredDialog()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Failed to delete account: ${e.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
             }
             .addOnFailureListener { e ->
@@ -198,6 +204,24 @@ class ProfileFragment : Fragment() {
             resources.getColor(R.color.secondary, null)
         )
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(
+            resources.getColor(R.color.secondary, null)
+        )
+    }
+
+    private fun showSessionExpiredDialog() {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Session Expired")
+            .setMessage("Your current session has expired. Please re-login and try again.")
+            .setPositiveButton("Re-login") { _, _ ->
+                logout()
+            }
+            .setCancelable(false)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .create()
+
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(
             resources.getColor(R.color.secondary, null)
         )
     }
