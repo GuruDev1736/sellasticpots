@@ -7,8 +7,11 @@ import android.os.Bundle
 import android.view.Window
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.sellasticpots.app.databinding.ActivityCheckoutBinding
@@ -34,6 +37,20 @@ class CheckoutActivity : AppCompatActivity() {
 
         binding = ActivityCheckoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        enableEdgeToEdge()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                0,
+                systemBars.top,
+                0,
+                systemBars.bottom
+            )
+            insets
+        }
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
